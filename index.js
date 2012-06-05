@@ -10,7 +10,7 @@
  *
  *	@todo this script makes heavy use of ES5 features. Shimming is required to run this in "less enabled" browsers
  */
-var generateTypos = function(keywords, wrongKeys, missedChars, transposedChars, doubleChars) {
+var generateTypos = function(keywords, wrongKeys, missedChars, transposedChars, doubleChars, flipBits) {
 			
 	// Adding a function to the String Prototype that allows to
 	// change characters at a certain index.
@@ -106,6 +106,30 @@ var generateTypos = function(keywords, wrongKeys, missedChars, transposedChars, 
 		return typos;
 	}
 
+	function bitflipping(word) {
+		var characters = word.split(''),
+			masks = [128,64,32,16,8,4,2,1],
+			allowed_chars = /[a-zA-Z0-9_\-\.]/,
+			typos = [];
+
+		for(var i = 0; i < characters.length; i++) {
+			var c = characters[i],
+				flipped = masks.map(function(mask) {
+					return String.fromCharCode(c.charCodeAt(0) ^ mask).toLocaleLowerCase();
+				}).filter(function(x) {
+					return x.match(allowed_chars);
+				});
+			typos.push(flipped.map(function(x) {
+				var e = word;
+				return e.replaceAt(i, x);
+			}));
+		}
+
+		return typos.reduce(function(a, b) {
+			return a.concat(b);
+		});
+	}
+
 	keywords.forEach(function(keyword) {
 		if(wrongKeys) {
 			typos.push(wrongKeyTypos(keyword));
@@ -118,6 +142,9 @@ var generateTypos = function(keywords, wrongKeys, missedChars, transposedChars, 
 		}
 		if(doubleChars) {
 			typos.push(doubleCharTypos(keyword));
+		}
+		if(flipBits) {
+			typos.push(bitflipping(keyword));
 		}
 	});
 
