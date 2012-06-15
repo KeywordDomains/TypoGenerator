@@ -8,6 +8,7 @@
  *	@param bool transposedChars
  *	@param bool doubleChars
  *	@param bool flipBits
+ *	@param bool generateHomophones
  *
  *	@todo this script makes heavy use of ES5 features. Shimming is required to run this in "less enabled" browsers
  */
@@ -194,7 +195,3 @@ var generateTypos = function(keywords, wrongKeys, missedChars, transposedChars, 
 		return a.concat(b);
 	});
 };
-
-console.log(generateTypos(['youtube.com', 'aiaiai'], false, false, false, false, false, true));
-
-
