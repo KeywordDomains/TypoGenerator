@@ -12,7 +12,7 @@
  *
  *	@todo this script makes heavy use of ES5 features. Shimming is required to run this in "less enabled" browsers
  */
-var generateTypos = function(keywords, wrongKeys, missedChars, transposedChars, doubleChars, flipBits, generateHomophones) {
+var generateTypos = function(keywords, options) {
 	// Adding a function to the String Prototype that allows to
 	// change characters at a certain index.
 	// Needed, since "string"[n] is read-only
@@ -170,22 +170,22 @@ var generateTypos = function(keywords, wrongKeys, missedChars, transposedChars, 
 	}
 
 	keywords.forEach(function(keyword) {
-		if(wrongKeys) {
+		if(options.wrongKeys) {
 			typos.push(wrongKeyTypos(keyword));
 		}
-		if(missedChars) {
+		if(options.missedChars) {
 			typos.push(missedCharsTypos(keyword));
 		}
-		if(transposedChars) {
+		if(options.transposedChars) {
 			typos.push(transposedCharTypos(keyword));
 		}
-		if(doubleChars) {
+		if(options.doubleChars) {
 			typos.push(doubleCharTypos(keyword));
 		}
-		if(flipBits) {
+		if(options.flipBits) {
 			typos.push(bitflipping(keyword));
 		}
-		if(generateHomophones) {
+		if(options.generateHomophones) {
 			typos.push(homophoneTypos(keyword));
 		}
 	});
